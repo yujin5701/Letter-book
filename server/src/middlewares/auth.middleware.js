@@ -10,7 +10,7 @@ export const verifyToken = async (req, res, next) => {
     const token = authHeader.split(" ")[1];
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        const user = await prisma.findUnique({ where: { id: decoded.userId } });
+        const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
 
         if(!user) return res.status(401).json({ error: "유효하지 않은 사용자입니다."});
 
