@@ -23,8 +23,10 @@ export const updateRelationshipWithUser2 = async (relationshipId, user2Id) => {
         data: {
             user2Id: user2Id,
             connectedAt: new Date(),
-        }
-    })
+        },
+    });
+
+    return updateRelationship;
 }
 
 export const acceptRelationship = async (user2Id, inviteCode) => {
