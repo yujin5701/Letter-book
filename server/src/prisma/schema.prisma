@@ -28,6 +28,7 @@ model Relationship {
   user2Id    String?
   inviteCode String   @unique
   connectedAt DateTime?
+  startedAt     DateTime?
   createdAt  DateTime @default(now())
 
   letters      Letter[]

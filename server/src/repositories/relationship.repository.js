@@ -12,7 +12,7 @@ export const createRelationship = async (user1Id, inviteCode) => {
 export const findRelationshipByInviteCode = async (inviteCode) => {
     // 초대 코드로 관계를 DB에서 조회해서 반환
     const relationship = await prisma.relationship.findUnique({ 
-        where: {inviteCode}
+        where: {inviteCode: inviteCode}
     });
     return relationship;
 }
@@ -53,4 +53,24 @@ export const acceptRelationship = async (user2Id, inviteCode) => {
     return {
         relationship_id: updatedRelationship.id,
     };       
+};
+
+export const setStartDateByUserId = async (userId, date) => {
+    const relationship = await prisma.relationship.findFirst({
+        where: {
+        OR: [
+            { user1Id: userId },
+            { user2Id: userId }
+        ]
+        }
+    });
+
+    if(!relationship) {
+        throw new Error("관계를 찾을 수 없습니다.");
+    }
+
+    return await prisma.reflection.update({
+        where: {id: relationship.id},
+        data: { startedAt: new Date(date)},
+    });
 };

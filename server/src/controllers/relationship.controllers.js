@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import prisma from "../prisma/client.js";
 import { generateInviteCode } from "../utils/inviteCode.js";
 import { createRelationship, acceptRelationship } from "../repositories/relationship.repository.js"
+import { setStartDateByUserId } from "../repositories/relationship.repository.js";
 
 export const invite = async (req, res) => {
     try{
@@ -43,8 +44,26 @@ export const handleAcceptRelationship = async (req, res) => {
             return res.status(404).json({ error: error.message });
         }
 
-         // 기타 예외 처리
     return res.status(500).json({ error: "서버 내부 오류로 관계 연결에 실패했습니다." });
     }
     
 }
+
+export const setStartDate = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { date } = req.body;
+
+        const updated = await setStartDateByUserId(userId, date);
+
+        res.status(200).json({
+            message: "시작일이 저장되었습니다.",
+            relationship: updated,
+        });
+    } catch (error) {
+        console.log("❌ 시작일 저장 오류:", error);
+        res.status(500).json({
+            message: error.message || "서버 오류",
+        });
+    }
+};
